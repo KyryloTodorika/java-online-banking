@@ -1,0 +1,1 @@
+public record MenuItem(String label, MenuAction action) {}
