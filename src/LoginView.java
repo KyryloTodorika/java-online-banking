@@ -10,13 +10,13 @@ public class LoginView {
 
         TextField username = new TextField();
         PasswordField password = new PasswordField();
-        TextField pin = new TextField();
 
         Label status = new Label();
 
         Button login = new Button("Login");
-        Button register = new Button("Register");
+        Button goRegister = new Button("Go to Register");
 
+        // LOGIN
         login.setOnAction(_ -> {
 
             User user = app.getBank().login(
@@ -31,28 +31,22 @@ public class LoginView {
             }
         });
 
-        register.setOnAction(_ -> {
-
-            app.getBank().register(
-                    username.getText(),
-                    password.getText(),
-                    pin.getText()
-            );
-
-            status.setText("Registered!");
-        });
+        // NAVIGATE TO REGISTER
+        goRegister.setOnAction(_ ->
+                stage.setScene(RegisterView.create(app, stage))
+        );
 
         VBox root = new VBox(10,
-                new Label("Username"), username,
-                new Label("Password"), password,
-                new Label("PIN (register)"), pin,
+                new Label("LOGIN"),
+                username,
+                password,
                 login,
-                register,
+                goRegister,
                 status
         );
 
         root.setPadding(new Insets(20));
 
-        return new Scene(root, 300, 300);
+        return new Scene(root, 300, 250);
     }
 }
