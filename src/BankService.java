@@ -32,7 +32,7 @@ public interface BankService {
     // TRANSACTIONS
     // =========================
 
-    void printTransactions(int userId) throws SQLException;
+    String printTransactions(int userId) throws SQLException;
 
     // =========================
     // TRANSFER

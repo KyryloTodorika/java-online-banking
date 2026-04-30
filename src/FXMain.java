@@ -1,29 +1,59 @@
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
 
 public class FXMain extends Application {
-    private BankService bank;
 
-    private Parent createContent() {
-        return new StackPane(new Text("Hello World"));
-    }
+    private BankService bank;
+    private User currentUser;
+    private ExportService exportService;
 
     @Override
-    public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(createContent(), 300, 300));
+    public void start(Stage stage) {
+
+        Connection conn = DatabaseConnection.getConnection();
+        bank = new Bank(conn);
+        exportService = new ExportService(conn);
+
+        stage.setTitle("Bank System");
+
+        stage.setOnCloseRequest(event -> {
+
+            System.out.println("App closing... exporting data");
+
+            try {
+                exportService.exportUsers();
+            } catch (Exception e) {
+                System.out.println("Export failed on exit");
+            }
+        });
+
+
+        stage.setScene(LoginView.create(this, stage));
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public BankService getBank() {
+        return bank;
+    }
+
+    public void setUser(User user, Stage stage) {
+        this.currentUser = user;
+        stage.setScene(MainMenuView.create(this, user, stage));
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public ExportService getExportService() {
+        return exportService;
+    }
+
+
+
+    static void main(String[] args) {
         launch(args);
     }
 }

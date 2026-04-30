@@ -450,7 +450,7 @@ public class Bank implements BankService {
         }
     }
 
-    public void printTransactions(int userId) throws SQLException {
+    public String printTransactions(int userId) throws SQLException {
 
         String sql = """
         SELECT id, type, amount, balance_after, created_at
@@ -459,24 +459,27 @@ public class Bank implements BankService {
         ORDER BY created_at DESC
     """;
 
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== TRANSACTIONS ===\n");
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
 
-            System.out.println("=== TRANSACTIONS ===");
-
             while (rs.next()) {
 
-                System.out.printf(
+                sb.append(String.format(
                         "ID:%d | %s | Amount: %.2f | Balance: %.2f | Date: %s%n",
                         rs.getInt("id"),
                         rs.getString("type"),
                         rs.getDouble("amount"),
                         rs.getDouble("balance_after"),
                         rs.getTimestamp("created_at")
-                );
+                ));
             }
         }
+
+        return sb.toString();
     }
 }
