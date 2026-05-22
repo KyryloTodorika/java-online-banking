@@ -7,12 +7,41 @@ import java.sql.SQLException;
 
 public class MainMenuView {
 
+    // =========================
+    // DIALOG STYLING HELPER
+    // =========================
+    private static void styleDialog(Dialog<?> d) {
+
+        DialogPane pane = d.getDialogPane();
+
+        pane.getStyleClass().add("bank-dialog");
+
+        pane.getStylesheets().add(
+                "file:src/resources/style.css"
+        );
+    }
+
     public static Scene create(FXMain app, User user, Stage stage) {
 
         VBox root = new VBox(10);
 
+        // =========================
+        // APPLY ROOT STYLE (IMPORTANT)
+        // =========================
+        root.setStyle(
+                "-fx-background-color: #1a1a1a;" +
+                        "-fx-padding: 20;" +
+                        "-fx-spacing: 8;"
+        );
+
+        // =========================
+        // LABELS
+        // =========================
         Label welcome = new Label("USER: " + user.getUsername());
         Label output = new Label();
+
+        welcome.getStyleClass().add("header");
+        output.getStyleClass().add("output");
 
         // =========================
         // USER BUTTONS
@@ -25,6 +54,9 @@ public class MainMenuView {
         Button transfer = new Button("Transfer");
         Button logout = new Button("Logout");
 
+        // =========================
+        // BALANCE
+        // =========================
         balance.setOnAction(e -> {
             try {
                 double b = app.getBank().getBalance(user.getId());
@@ -34,9 +66,14 @@ public class MainMenuView {
             }
         });
 
+        // =========================
+        // DEPOSIT
+        // =========================
         deposit.setOnAction(e -> {
+
             TextInputDialog d = new TextInputDialog();
             d.setHeaderText("Amount");
+            styleDialog(d);
 
             d.showAndWait().ifPresent(val -> {
                 try {
@@ -48,14 +85,20 @@ public class MainMenuView {
             });
         });
 
+        // =========================
+        // WITHDRAW
+        // =========================
         withdraw.setOnAction(e -> {
+
             TextInputDialog amount = new TextInputDialog();
             amount.setHeaderText("Amount");
+            styleDialog(amount);
 
             amount.showAndWait().ifPresent(val -> {
 
                 TextInputDialog pin = new TextInputDialog();
                 pin.setHeaderText("PIN");
+                styleDialog(pin);
 
                 pin.showAndWait().ifPresent(p -> {
                     try {
@@ -72,6 +115,9 @@ public class MainMenuView {
             });
         });
 
+        // =========================
+        // TRANSACTIONS
+        // =========================
         transactions.setOnAction(e -> {
             try {
                 output.setText(app.getBank().printTransactions(user.getId()));
@@ -80,20 +126,26 @@ public class MainMenuView {
             }
         });
 
+        // =========================
+        // TRANSFER
+        // =========================
         transfer.setOnAction(e -> {
 
             TextInputDialog r = new TextInputDialog();
             r.setHeaderText("Receiver");
+            styleDialog(r);
 
             r.showAndWait().ifPresent(receiver -> {
 
                 TextInputDialog amount = new TextInputDialog();
                 amount.setHeaderText("Amount");
+                styleDialog(amount);
 
                 amount.showAndWait().ifPresent(val -> {
 
                     TextInputDialog pin = new TextInputDialog();
                     pin.setHeaderText("PIN");
+                    styleDialog(pin);
 
                     pin.showAndWait().ifPresent(p -> {
                         try {
@@ -112,10 +164,16 @@ public class MainMenuView {
             });
         });
 
+        // =========================
+        // LOGOUT
+        // =========================
         logout.setOnAction(e ->
                 stage.setScene(LoginView.create(app, stage))
         );
 
+        // =========================
+        // ADD USER COMPONENTS
+        // =========================
         root.getChildren().addAll(
                 welcome,
                 balance,
@@ -136,6 +194,7 @@ public class MainMenuView {
         if (privileged) {
 
             Label adminLabel = new Label("=== ADMIN PANEL ===");
+            adminLabel.getStyleClass().add("admin-label");
 
             Button listUsers = new Button("List Users");
             Button totalMoney = new Button("Total Bank Money");
@@ -160,8 +219,10 @@ public class MainMenuView {
             });
 
             blockUser.setOnAction(e -> {
+
                 TextInputDialog d = new TextInputDialog();
                 d.setHeaderText("User to block");
+                styleDialog(d);
 
                 d.showAndWait().ifPresent(u -> {
                     try {
@@ -174,8 +235,10 @@ public class MainMenuView {
             });
 
             unblockUser.setOnAction(e -> {
+
                 TextInputDialog d = new TextInputDialog();
                 d.setHeaderText("User to unblock");
+                styleDialog(d);
 
                 d.showAndWait().ifPresent(u -> {
                     try {
@@ -206,8 +269,10 @@ public class MainMenuView {
             Button promote = new Button("Promote User");
 
             promote.setOnAction(e -> {
+
                 TextInputDialog d = new TextInputDialog();
                 d.setHeaderText("User to promote");
+                styleDialog(d);
 
                 d.showAndWait().ifPresent(u -> {
                     try {
@@ -222,7 +287,10 @@ public class MainMenuView {
             root.getChildren().add(promote);
         }
 
-        // logout always last
+        // =========================
+        // FINAL LAYOUT
+        // =========================
+
         root.getChildren().addAll(logout, output);
 
         Scene scene = new Scene(root, 400, 500);

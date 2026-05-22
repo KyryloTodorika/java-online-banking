@@ -1,46 +1,170 @@
-/* Root layout */
+/* =========================
+   GLOBAL ROOT
+========================= */
 .root {
-    -fx-background-color: #1e1e2f;
-    -fx-font-family: "Segoe UI";
+    -fx-background-color: #1a1a1a;
+    -fx-font-family: "Courier New";
 }
 
-/* Labels */
+/* =========================
+   GENERAL LABELS
+========================= */
 .label {
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-}
-
-/* Main title / header */
-.header {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-}
-
-/* Buttons */
-.button {
-    -fx-background-color: #3a86ff;
-    -fx-text-fill: white;
+    -fx-text-fill: #00cc44;
     -fx-font-size: 13px;
-    -fx-background-radius: 8;
-    -fx-padding: 8 12;
+    -fx-font-family: "Courier New";
+}
+
+/* =========================
+   HEADER / TITLE
+========================= */
+.header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #009933;
+    -fx-padding: 6 0 10 0;
+    -fx-font-family: "Courier New";
+}
+
+/* =========================
+   BUTTONS (ATM PHYSICAL STYLE)
+========================= */
+.button {
+    -fx-background-color: #252525;
+    -fx-text-fill: #b0b0b0;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New";
+
+    -fx-background-radius: 4;
+    -fx-padding: 9 14;
+    -fx-cursor: hand;
+
+    -fx-border-color: #404040 #181818 #181818 #404040;
+    -fx-border-width: 1 2 3 1;
+    -fx-border-radius: 4;
 }
 
 .button:hover {
-    -fx-background-color: #265df2;
+    -fx-background-color: #2d2d2d;
+    -fx-text-fill: #d0d0d0;
+    -fx-border-color: #505050 #202020 #202020 #505050;
 }
 
 .button:pressed {
-    -fx-background-color: #1d4ed8;
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #00cc44;
+    -fx-border-width: 1 1 1 1;
+    -fx-translate-y: 1;
+    -fx-translate-x: 1;
 }
 
-/* Admin section separator look */
-.separator {
-    -fx-opacity: 0.4;
-}
-
-/* Output label (status text) */
+/* =========================
+   OUTPUT / STATUS TEXT (CRT SCREEN)
+========================= */
 .output {
-    -fx-text-fill: #00ff99;
+    -fx-text-fill: #00cc44;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New";
+    -fx-effect: dropshadow(gaussian, rgba(0,200,60,0.6), 6, 0.5, 0, 0);
+}
+
+/* =========================
+   SEPARATOR
+========================= */
+.separator {
+    -fx-opacity: 0.2;
+    -fx-background-color: #00cc44;
+}
+
+/* =========================
+   INPUT FIELDS
+========================= */
+.text-field {
+    -fx-background-color: #0a1a0e;
+    -fx-text-fill: #00cc44;
+    -fx-prompt-text-fill: #1a5a28;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 13px;
+
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-border-color: #0d400d;
+    -fx-border-width: 1;
+    -fx-padding: 6 8;
+}
+
+.text-field:focused {
+    -fx-border-color: #00aa33;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,180,50,0.4), 6, 0.3, 0, 0);
+}
+
+/* =========================
+   DIALOG PANE (ATM SCREEN STYLE)
+========================= */
+.dialog-pane {
+    -fx-background-color: #0a1a0e;
+    -fx-border-color: #0d400d;
+    -fx-border-width: 2;
+}
+
+.dialog-pane > .title-bar {
+    -fx-background-color: #071208;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #071208;
+    -fx-border-color: #0d400d;
+    -fx-border-width: 0 0 1 0;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #009933;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Courier New";
+}
+
+.dialog-pane .content {
+    -fx-text-fill: #00cc44;
+    -fx-font-family: "Courier New";
+}
+
+.dialog-pane .button {
+    -fx-background-color: #1a2e1a;
+    -fx-text-fill: #00aa33;
+    -fx-border-color: #2a4a2a;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-font-family: "Courier New";
+    -fx-font-size: 11px;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: #1e351e;
+    -fx-text-fill: #00cc44;
+}
+
+.dialog-pane .button:pressed {
+    -fx-background-color: #0d1a0d;
+}
+
+/* =========================
+   SCROLL
+========================= */
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+/* =========================
+   ADMIN LABEL
+========================= */
+.admin-label {
+    -fx-text-fill: #8866cc;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-font-family: "Courier New";
 }
