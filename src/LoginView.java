@@ -47,6 +47,12 @@ public class LoginView {
 
         root.setPadding(new Insets(20));
 
-        return new Scene(root, 300, 250);
+        Scene scene = new Scene(root, 300, 250);
+
+        scene.getStylesheets().add(
+                "file:src/resources/style.css"
+        );
+
+        return scene;
     }
 }

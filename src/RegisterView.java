@@ -56,6 +56,12 @@ public class RegisterView {
 
         root.setPadding(new Insets(20));
 
-        return new Scene(root, 300, 300);
+        Scene scene = new Scene(root, 300, 300);
+
+        scene.getStylesheets().add(
+                "file:src/resources/style.css"
+        );
+
+        return scene;
     }
 }

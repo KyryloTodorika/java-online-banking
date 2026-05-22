@@ -225,6 +225,12 @@ public class MainMenuView {
         // logout always last
         root.getChildren().addAll(logout, output);
 
-        return new Scene(root, 400, 500);
+        Scene scene = new Scene(root, 400, 500);
+
+        scene.getStylesheets().add(
+                "file:src/resources/style.css"
+        );
+
+        return scene;
     }
 }

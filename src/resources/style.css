@@ -1,0 +1,46 @@
+/* Root layout */
+.root {
+    -fx-background-color: #1e1e2f;
+    -fx-font-family: "Segoe UI";
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Main title / header */
+.header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #3a86ff;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+}
+
+.button:hover {
+    -fx-background-color: #265df2;
+}
+
+.button:pressed {
+    -fx-background-color: #1d4ed8;
+}
+
+/* Admin section separator look */
+.separator {
+    -fx-opacity: 0.4;
+}
+
+/* Output label (status text) */
+.output {
+    -fx-text-fill: #00ff99;
+    -fx-font-size: 13px;
+}
