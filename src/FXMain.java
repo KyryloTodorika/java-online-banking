@@ -34,7 +34,7 @@ public class FXMain extends Application {
         stage.show();
 
         // =========================
-        // OPTIONAL: AUTO EXPORT ON EXIT
+        // EXPORT ON EXIT
         // =========================
         stage.setOnCloseRequest(event -> {
             try {
@@ -55,24 +55,10 @@ public class FXMain extends Application {
     }
 
     // =========================
-    // ROLE ROUTER (IMPORTANT PART)
+    // SINGLE MAIN SCENE (NEW APPROACH)
     // =========================
     private void openMainScene(User user, Stage stage) {
-
-        switch (user.getRole()) {
-
-            case USER -> stage.setScene(
-                    UserMenuView.create(this, user, stage)
-            );
-
-            case ADMIN -> stage.setScene(
-                    AdminMenuView.create(this, user, stage)
-            );
-
-            case SUPER_ADMIN -> stage.setScene(
-                    SuperAdminMenuView.create(this, user, stage)
-            );
-        }
+        stage.setScene(MainMenuView.create(this, user, stage));
     }
 
     // =========================

@@ -9,8 +9,14 @@ public class MainMenuView {
 
     public static Scene create(FXMain app, User user, Stage stage) {
 
-        Label welcome = new Label("Welcome " + user.getUsername());
+        VBox root = new VBox(10);
+
+        Label welcome = new Label("USER: " + user.getUsername());
         Label output = new Label();
+
+        // =========================
+        // USER BUTTONS
+        // =========================
 
         Button balance = new Button("Show Balance");
         Button deposit = new Button("Deposit");
@@ -19,120 +25,206 @@ public class MainMenuView {
         Button transfer = new Button("Transfer");
         Button logout = new Button("Logout");
 
-        // BALANCE
-        balance.setOnAction(_ -> {
-            double b;
+        balance.setOnAction(e -> {
             try {
-                b = app.getBank().getBalance(user.getId());
+                double b = app.getBank().getBalance(user.getId());
+                output.setText("Balance: " + b);
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                output.setText("Error");
             }
-            output.setText("Balance: " + b);
         });
 
-        // DEPOSIT
-        deposit.setOnAction(_ -> {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setHeaderText("Deposit amount");
+        deposit.setOnAction(e -> {
+            TextInputDialog d = new TextInputDialog();
+            d.setHeaderText("Amount");
 
-            dialog.showAndWait().ifPresent(val -> {
-                double amount = Double.parseDouble(val);
+            d.showAndWait().ifPresent(val -> {
                 try {
-                    app.getBank().deposit(user.getId(), amount);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+                    app.getBank().deposit(user.getId(), Double.parseDouble(val));
+                    output.setText("Deposited");
+                } catch (Exception ex) {
+                    output.setText("Error");
                 }
-                output.setText("Deposited: " + amount);
             });
         });
 
-        // WITHDRAW
-        withdraw.setOnAction(_ -> {
-            TextInputDialog amountDialog = new TextInputDialog();
-            amountDialog.setHeaderText("Withdraw amount");
+        withdraw.setOnAction(e -> {
+            TextInputDialog amount = new TextInputDialog();
+            amount.setHeaderText("Amount");
 
-            amountDialog.showAndWait().ifPresent(val -> {
+            amount.showAndWait().ifPresent(val -> {
 
-                TextInputDialog pinDialog = new TextInputDialog();
-                pinDialog.setHeaderText("PIN");
+                TextInputDialog pin = new TextInputDialog();
+                pin.setHeaderText("PIN");
 
-                pinDialog.showAndWait().ifPresent(pin -> {
+                pin.showAndWait().ifPresent(p -> {
                     try {
-                        app.getBank().withdraw(user.getId(),
+                        app.getBank().withdraw(
+                                user.getId(),
                                 Double.parseDouble(val),
-                                pin);
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                                p
+                        );
+                        output.setText("Withdraw success");
+                    } catch (Exception ex) {
+                        output.setText("Error");
                     }
-
-                    output.setText("Withdraw success");
                 });
             });
         });
 
-        // TRANSACTIONS
-        transactions.setOnAction(_ -> {
-
+        transactions.setOnAction(e -> {
             try {
-                String result = app.getBank().printTransactions(user.getId());
-                output.setText(result);
-
+                output.setText(app.getBank().printTransactions(user.getId()));
             } catch (SQLException ex) {
                 output.setText("Error loading transactions");
             }
         });
 
-        // TRANSFER
-        transfer.setOnAction(_ -> {
+        transfer.setOnAction(e -> {
 
-            TextInputDialog receiver = new TextInputDialog();
-            receiver.setHeaderText("Receiver username");
+            TextInputDialog r = new TextInputDialog();
+            r.setHeaderText("Receiver");
 
-            receiver.showAndWait().ifPresent(r -> {
+            r.showAndWait().ifPresent(receiver -> {
 
-                TextInputDialog amountDialog = new TextInputDialog();
-                amountDialog.setHeaderText("Amount");
+                TextInputDialog amount = new TextInputDialog();
+                amount.setHeaderText("Amount");
 
-                amountDialog.showAndWait().ifPresent(val -> {
+                amount.showAndWait().ifPresent(val -> {
 
-                    TextInputDialog pinDialog = new TextInputDialog();
-                    pinDialog.setHeaderText("PIN");
+                    TextInputDialog pin = new TextInputDialog();
+                    pin.setHeaderText("PIN");
 
-                    pinDialog.showAndWait().ifPresent(pin -> {
-
+                    pin.showAndWait().ifPresent(p -> {
                         try {
                             app.getBank().transfer(
                                     user.getId(),
-                                    r,
+                                    receiver,
                                     Double.parseDouble(val),
-                                    pin
+                                    p
                             );
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
+                            output.setText("Transfer done");
+                        } catch (Exception ex) {
+                            output.setText("Error");
                         }
-
-                        output.setText("Transfer done");
                     });
                 });
             });
         });
 
-        // LOGOUT
-        logout.setOnAction(_ -> stage.setScene(LoginView.create(app, stage)));
+        logout.setOnAction(e ->
+                stage.setScene(LoginView.create(app, stage))
+        );
 
-        VBox root = new VBox(10,
+        root.getChildren().addAll(
                 welcome,
                 balance,
                 deposit,
                 withdraw,
                 transactions,
-                transfer,
-                logout,
-                output
+                transfer
         );
 
-        root.setStyle("-fx-padding: 20");
+        // =========================
+        // ADMIN LOGIC
+        // =========================
 
-        return new Scene(root, 350, 400);
+        boolean isAdmin = user.getRole() == Role.ADMIN;
+        boolean isSuper = user.getRole() == Role.SUPER_ADMIN;
+        boolean privileged = isAdmin || isSuper;
+
+        if (privileged) {
+
+            Label adminLabel = new Label("=== ADMIN PANEL ===");
+
+            Button listUsers = new Button("List Users");
+            Button totalMoney = new Button("Total Bank Money");
+            Button blockUser = new Button("Block User");
+            Button unblockUser = new Button("Unblock User");
+
+            listUsers.setOnAction(e -> {
+                try {
+                    app.getBank().listAllUsers();
+                    output.setText("Printed to console");
+                } catch (SQLException ex) {
+                    output.setText("Error");
+                }
+            });
+
+            totalMoney.setOnAction(e -> {
+                try {
+                    output.setText("Total: " + app.getBank().totalBankMoney());
+                } catch (SQLException ex) {
+                    output.setText("Error");
+                }
+            });
+
+            blockUser.setOnAction(e -> {
+                TextInputDialog d = new TextInputDialog();
+                d.setHeaderText("User to block");
+
+                d.showAndWait().ifPresent(u -> {
+                    try {
+                        app.getBank().blockUser(u);
+                        output.setText("Blocked");
+                    } catch (Exception ex) {
+                        output.setText("Error");
+                    }
+                });
+            });
+
+            unblockUser.setOnAction(e -> {
+                TextInputDialog d = new TextInputDialog();
+                d.setHeaderText("User to unblock");
+
+                d.showAndWait().ifPresent(u -> {
+                    try {
+                        app.getBank().unblockUser(u);
+                        output.setText("Unblocked");
+                    } catch (Exception ex) {
+                        output.setText("Error");
+                    }
+                });
+            });
+
+            root.getChildren().addAll(
+                    new Separator(),
+                    adminLabel,
+                    listUsers,
+                    totalMoney,
+                    blockUser,
+                    unblockUser
+            );
+        }
+
+        // =========================
+        // SUPER ADMIN
+        // =========================
+
+        if (isSuper) {
+
+            Button promote = new Button("Promote User");
+
+            promote.setOnAction(e -> {
+                TextInputDialog d = new TextInputDialog();
+                d.setHeaderText("User to promote");
+
+                d.showAndWait().ifPresent(u -> {
+                    try {
+                        app.getBank().promoteToAdmin(u);
+                        output.setText("Promoted");
+                    } catch (Exception ex) {
+                        output.setText("Error");
+                    }
+                });
+            });
+
+            root.getChildren().add(promote);
+        }
+
+        // logout always last
+        root.getChildren().addAll(logout, output);
+
+        return new Scene(root, 400, 500);
     }
 }
